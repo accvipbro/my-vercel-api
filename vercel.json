@@ -1,0 +1,14 @@
+{
+  "version": 2,
+  "functions": {
+    "api/tiktokview.py": {
+      "runtime": "python3.12"
+    }
+  },
+  "routes": [
+    {
+      "src": "/tiktokview",
+      "dest": "api/tiktokview.py"
+    }
+  ]
+}

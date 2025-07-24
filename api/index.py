@@ -1,21 +1,22 @@
-import json
+from flask import Flask, request, jsonify
 import requests
 
-def handler(request, response):
-    video_url = request.query.get("video")
-    if not video_url:
-        response.status_code = 400
-        return response.json({ "error": "Thiếu link video" })
+app = Flask(__name__)
 
-    headers = {
-        "User-Agent": "Mozilla/5.0"
-    }
+@app.route("/", methods=["GET"])
+def tiktokview():
+    video_url = request.args.get("video")
+    if not video_url:
+        return jsonify({ "error": "Thiếu link video" }), 400
 
     try:
-        r = requests.get(video_url, headers=headers, timeout=10)
+        r = requests.get(video_url, headers={"User-Agent": "Mozilla/5.0"}, timeout=10)
         if r.status_code == 200:
-            return response.json({ "success": True, "message": "Đã gửi view" })
+            return jsonify({ "success": True, "message": "Đã gửi view" })
         else:
-            return response.json({ "success": False, "message": f"Lỗi: {r.status_code}" })
+            return jsonify({ "success": False, "message": f"Lỗi: {r.status_code}" })
     except Exception as e:
-        return response.json({ "success": False, "error": str(e) })
+        return jsonify({ "success": False, "error": str(e) })
+
+# cần dòng này để Vercel biết app là Flask app
+app = app
